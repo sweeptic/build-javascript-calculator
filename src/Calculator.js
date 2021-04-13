@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './Calculator.module.css';
 
 const Calculator = () => {
+  const [display, setDisplay] = useState(0);
+
   return (
     <div className={styles.container}>
-      <div className={styles.div1}>div1</div>
+      <div className={styles.div1}>{display}</div>
       <div className={styles.div2}>AC</div>
       <div className={styles.div3}>/</div>
       <div className={styles.div4}>*</div>
