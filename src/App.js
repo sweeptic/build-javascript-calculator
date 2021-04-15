@@ -1,9 +1,9 @@
 import styles from './App.module.css';
 import Calculator from './Calculator';
 
-function App() {
-  const initialState = { editor: ['0'], memory: [], hasDot: false };
+export const initialState = { editor: ['0'], memory: [], hasDot: false };
 
+function App() {
   return (
     <div className={styles.app}>
       <h1>Javascript Calculator</h1>
