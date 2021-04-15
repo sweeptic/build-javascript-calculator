@@ -3,8 +3,6 @@ import * as actionTypes from './actionTypes';
 import styles from './Calculator.module.css';
 
 const NumPad = React.memo(({ dispatch, initialState }) => {
-  console.log('render');
-
   return (
     <>
       <div

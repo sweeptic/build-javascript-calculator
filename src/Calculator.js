@@ -11,43 +11,78 @@ function init(initialState) {
 
 function hasDot(key, state) {
   if (!state.hasDot) {
-    return {
-      ...state,
-      hasDot: true,
-      memory: [...state.editor, key],
-      editor: [...state.editor, key],
-    };
+    if (state.memory.length === 0) {
+      return {
+        ...state,
+        hasDot: true,
+        memory: [...state.editor, key],
+        editor: [...state.editor, key],
+      };
+    } else if (state.editor[0] === '-') {
+      return {
+        ...state,
+        hasDot: true,
+        memory: [...['-', '0'], key],
+        editor: [0, key],
+      };
+    } else {
+      return {
+        ...state,
+        hasDot: true,
+        memory: [...state.memory, key],
+        editor: [...state.editor, key],
+      };
+    }
   } else {
     return { ...state };
   }
 }
 
 function addNum(key, state) {
-  let newMemory = [...state.memory];
-  let newEditor = [...state.editor];
-
   if (state.editor[0] === '0' && state.editor.length === 1) {
+    let newMemory = [...state.memory];
+    let newEditor = [...state.editor];
     newMemory = [key];
     if (key !== 0) {
       newEditor = [key];
     }
+    return {
+      ...state,
+      memory: [...newMemory],
+      editor: [...newEditor],
+    };
+  } else if (state.editor[0] === '-') {
+    return {
+      ...state,
+      memory: [...state.memory, key],
+      editor: [key],
+    };
   } else {
-    newMemory = [...newMemory, key];
-    newEditor = [...newEditor, key];
+    return {
+      ...state,
+      memory: [...state.memory, key],
+      editor: [...state.editor, key],
+    };
   }
-
-  return {
-    ...state,
-    memory: [...newMemory],
-    editor: [...newEditor],
-  };
 }
 
 function addMinus(key, state) {
-  // let newMemory = [...state.memory];
-  // let newEditor = [...state.editor];
-  // if (state.editor.length === 1) {
-  // }
+  //az elejen lekezelni az edge case eket a vegen pedig elkuldeni muveletre
+  if (state.editor[0] === '-' && state.memory[0] === '-') {
+    return {
+      ...state,
+    };
+  } else if (state.editor[0] === '0' && state.editor.length === 1 && state.memory.length === 0) {
+    return {
+      memory: [key],
+      editor: [key],
+    };
+  } else {
+    console.log('minus operation');
+    return {
+      ...state,
+    };
+  }
 }
 
 function reducer(state, action) {
@@ -86,8 +121,8 @@ const Calculator = ({ initialState }) => {
 
   return (
     <div className={styles.container}>
-      <Display state={state} />;
-      <NumPad dispatch={dispatch} initialState={initialState} />;
+      <Display state={state} />
+      <NumPad dispatch={dispatch} initialState={initialState} />
     </div>
   );
 };
