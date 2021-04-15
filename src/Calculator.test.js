@@ -138,7 +138,7 @@ describe('calculator input tests', () => {
       expect(editor).toHaveTextContent('0');
     });
 
-    describe('numpad minus tests', () => {
+    describe.skip('numpad minus tests', () => {
       test('memory/editor renders - when clicked -', () => {
         fireEvent.click(wrapper.getByTestId('numpad-minus'));
         expect(memory).toHaveTextContent('-');
