@@ -55,13 +55,13 @@
 .div6 {
   grid-area: 5 / 4 / 7 / 5;
 }
-.div7 {
+.div13 {
   grid-area: 3 / 1 / 4 / 2;
 }
-.div8 {
+.div14 {
   grid-area: 3 / 2 / 4 / 3;
 }
-.div9 {
+.div15 {
   grid-area: 3 / 3 / 4 / 4;
 }
 .div10 {
@@ -73,13 +73,13 @@
 .div12 {
   grid-area: 4 / 3 / 5 / 4;
 }
-.div13 {
+.div7 {
   grid-area: 5 / 1 / 6 / 2;
 }
-.div14 {
+.div8 {
   grid-area: 5 / 2 / 6 / 3;
 }
-.div15 {
+.div9 {
   grid-area: 5 / 3 / 6 / 4;
 }
 .div16 {

@@ -41,6 +41,14 @@ function addNum(key, state) {
   };
 }
 
+function addMinus(key, state) {
+  let newMemory = [...state.memory];
+  let newEditor = [...state.editor];
+
+  if (state.editor.length === 1) {
+  }
+}
+
 function reducer(state, action) {
   switch (action.type) {
     case actionTypes.NUM:
@@ -51,6 +59,21 @@ function reducer(state, action) {
 
     case actionTypes.DOT:
       return hasDot(action.payload, state);
+
+    case actionTypes.MINUS:
+      return addMinus(action.payload, state);
+
+    case actionTypes.PLUS:
+      return { ...state };
+
+    case actionTypes.DIVIDE:
+      return { ...state };
+
+    case actionTypes.MULTIPLY:
+      return { ...state };
+
+    case actionTypes.EQUAL:
+      return { ...state };
 
     default:
       throw new Error(`invalid action type ${action.type}`);
@@ -78,10 +101,16 @@ const Calculator = ({ initialState }) => {
         }>
         AC
       </div>
-      <div data-testid={'numpad-divide'} className={styles.div3}>
+      <div
+        data-testid={'numpad-divide'}
+        className={styles.div3}
+        onClick={() => dispatch({ type: actionTypes.DIVIDE, payload: '/' })}>
         /
       </div>
-      <div data-testid={'numpad-multiplication'} className={styles.div4}>
+      <div
+        data-testid={'numpad-multiplication'}
+        className={styles.div4}
+        onClick={() => dispatch({ type: actionTypes.MULTIPLY, payload: '*' })}>
         *
       </div>
       <div
@@ -90,7 +119,10 @@ const Calculator = ({ initialState }) => {
         onClick={() => dispatch({ type: actionTypes.NUM, payload: 0 })}>
         0
       </div>
-      <div data-testid={'numpad-equal'} className={styles.div6}>
+      <div
+        data-testid={'numpad-equal'}
+        className={styles.div6}
+        onClick={() => dispatch({ type: actionTypes.EQUAL, payload: '=' })}>
         =
       </div>
       <div
@@ -147,10 +179,16 @@ const Calculator = ({ initialState }) => {
         onClick={() => dispatch({ type: actionTypes.NUM, payload: 9 })}>
         9
       </div>
-      <div data-testid={'numpad-minus'} className={styles.div16}>
+      <div
+        data-testid={'numpad-minus'}
+        className={styles.div16}
+        onClick={() => dispatch({ type: actionTypes.MINUS, payload: '-' })}>
         -
       </div>
-      <div data-testid={'numpad-plus'} className={styles.div17}>
+      <div
+        data-testid={'numpad-plus'}
+        className={styles.div17}
+        onClick={() => dispatch({ type: actionTypes.PLUS, payload: '+' })}>
         +
       </div>
       <div

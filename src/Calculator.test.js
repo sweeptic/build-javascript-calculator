@@ -211,6 +211,21 @@ describe('calculator input tests', () => {
         expect(editor).toHaveTextContent('*');
       });
 
+      test('memory: "66-", editor: "-" - when clicked 66- ', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-6'));
+        fireEvent.click(wrapper.getByTestId('numpad-6'));
+        fireEvent.click(wrapper.getByTestId('numpad-minus'));
+        expect(memory).toHaveTextContent('66-');
+        expect(editor).toHaveTextContent('-');
+      });
+
+      test('memory: "0-", editor: "-" - when clicked 0- ', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-0'));
+        fireEvent.click(wrapper.getByTestId('numpad-minus'));
+        expect(memory).toHaveTextContent('0-');
+        expect(editor).toHaveTextContent('-');
+      });
+
       test('memory: "=NAN", editor: "NAN" - when clicked - =', () => {
         fireEvent.click(wrapper.getByTestId('numpad-minus'));
         fireEvent.click(wrapper.getByTestId('numpad-equal'));
