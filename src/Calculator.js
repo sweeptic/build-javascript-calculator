@@ -78,15 +78,21 @@ const Calculator = ({ initialState }) => {
         }>
         AC
       </div>
-      <div className={styles.div3}>/</div>
-      <div className={styles.div4}>*</div>
+      <div data-testid={'numpad-divide'} className={styles.div3}>
+        /
+      </div>
+      <div data-testid={'numpad-multiplication'} className={styles.div4}>
+        *
+      </div>
       <div
         data-testid={'numpad-0'}
         className={styles.div5}
         onClick={() => dispatch({ type: actionTypes.NUM, payload: 0 })}>
         0
       </div>
-      <div className={styles.div6}>=</div>
+      <div data-testid={'numpad-equal'} className={styles.div6}>
+        =
+      </div>
       <div
         data-testid={'numpad-1'}
         className={styles.div7}
@@ -141,10 +147,14 @@ const Calculator = ({ initialState }) => {
         onClick={() => dispatch({ type: actionTypes.NUM, payload: 9 })}>
         9
       </div>
-      <div className={styles.div16}>-</div>
-      <div className={styles.div17}>+</div>
+      <div data-testid={'numpad-minus'} className={styles.div16}>
+        -
+      </div>
+      <div data-testid={'numpad-plus'} className={styles.div17}>
+        +
+      </div>
       <div
-        data-testid={'numpad-.'}
+        data-testid={'numpad-dot'}
         className={styles.div18}
         onClick={() => dispatch({ type: actionTypes.DOT, payload: '.' })}>
         .
