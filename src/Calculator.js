@@ -10,35 +10,38 @@ function init(initialState) {
 }
 
 function hasDot(key, state) {
+  const newState = { ...state, editorHasValue: true };
   if (!state.hasDot) {
     if (state.memory.length === 0) {
       return {
-        ...state,
+        ...newState,
         hasDot: true,
         memory: [...state.editor, key],
         editor: [...state.editor, key],
       };
     } else if (state.editor[0] === state.hasOperatorFirst) {
       return {
-        ...state,
+        ...newState,
         hasDot: true,
         memory: [...[state.hasOperatorFirst, '0'], key],
         editor: [0, key],
       };
     } else {
       return {
-        ...state,
+        ...newState,
         hasDot: true,
         memory: [...state.memory, key],
         editor: [...state.editor, key],
       };
     }
   } else {
-    return { ...state };
+    return { ...newState };
   }
 }
 
 function addNum(key, state) {
+  const newState = { ...state, editorHasValue: true, preCursor: false };
+
   if (state.editor[0] === 0 && state.editor.length === 1) {
     let newMemory = [...state.memory];
     let newEditor = [...state.editor];
@@ -54,19 +57,19 @@ function addNum(key, state) {
     }
 
     return {
-      ...state,
+      ...newState,
       memory: [...newMemory],
       editor: [...newEditor],
     };
   } else if (state.editor[0] === state.hasOperatorFirst) {
     return {
-      ...state,
+      ...newState,
       memory: [...state.memory, key],
       editor: [key],
     };
   } else {
     return {
-      ...state,
+      ...newState,
       memory: [...state.memory, key],
       editor: [...state.editor, key],
     };
@@ -74,27 +77,46 @@ function addNum(key, state) {
 }
 
 function addOperator(key, state) {
-  //az elejen lekezelni az edge case eket a vegen pedig elkuldeni muveletre
-  // if (state.editor[0] === state.hasOperatorFirst && state.memory[0] === state.hasOperatorFirst) {
-  if (state.hasOperatorFirst) {
+  //cancel / and * in the beginning
+  if (state.memory.length === 0 && !state.editorHasValue && (key === '/' || key === '*')) {
     return {
-      hasOperatorFirst: key,
       ...state,
-      memory: [key],
-      editor: [key],
     };
-  } else if (state.editor[0] === 0 && state.editor.length === 1 && state.memory.length === 0) {
+  }
+
+  if (state.editorHasValue) {
     return {
       ...state,
+      hasDot: false,
+      editorHasValue: false,
       hasOperatorFirst: key,
-      memory: [key],
+      memory: [...state.memory, key],
       editor: [key],
     };
   } else {
-    console.log(key + 'operation');
+    const newMemory = [...state.memory];
+
+    let preCursor = false;
+
+    if (!state.editorHasValue && key === '-') {
+      // put precursor if we need negative value
+      preCursor = true;
+    } else {
+      //we can change operator
+      newMemory.pop();
+    }
+
+    // remove precursor if change operator
+    if (state.preCursor) {
+      newMemory.pop();
+    }
+
     return {
       ...state,
-      hasOperatorFirst: undefined,
+      preCursor: preCursor,
+      hasOperatorFirst: key,
+      memory: [...newMemory, key],
+      editor: [key],
     };
   }
 }
