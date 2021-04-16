@@ -20,10 +20,11 @@ function hasDot(key, state) {
         editor: [...state.editor, key],
       };
     } else if (state.editor[0] === state.hasOperatorFirst) {
+      console.log('x');
       return {
         ...newState,
         hasDot: true,
-        memory: [...[state.hasOperatorFirst, '0'], key],
+        memory: [...[...state.memory, '0'], key],
         editor: [0, key],
       };
     } else {
