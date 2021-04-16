@@ -1,7 +1,7 @@
 import styles from './App.module.css';
 import Calculator from './Calculator';
 
-export const initialState = { editor: ['0'], memory: [], hasDot: false };
+export const initialState = { editor: [0], memory: [], hasDot: false, hasOperatorFirst: undefined };
 
 function App() {
   return (

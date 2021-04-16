@@ -18,7 +18,7 @@ const NumPad = React.memo(({ dispatch, initialState }) => {
         /
       </div>
       <div
-        data-testid={'numpad-multiplication'}
+        data-testid={'numpad-multiply'}
         className={styles.div4}
         onClick={() => dispatch({ type: actionTypes.MULTIPLY, payload: '*' })}>
         *

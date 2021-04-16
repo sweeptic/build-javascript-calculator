@@ -70,6 +70,13 @@ describe('calculator input tests', () => {
       expect(editor).toHaveTextContent(/^0$/);
     });
 
+    test('memory/editor renders 3 when clicked 03', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-3'));
+      expect(memory).toHaveTextContent(/^3$/);
+      expect(editor).toHaveTextContent(/^3$/);
+    });
+
     test('memory/editor renders 0 when clicked 000', () => {
       fireEvent.click(wrapper.getByTestId('numpad-0'));
       fireEvent.click(wrapper.getByTestId('numpad-0'));
@@ -190,6 +197,31 @@ describe('calculator input tests', () => {
         expect(editor).toHaveTextContent(/^0$/);
       });
 
+      test('memory: "-0", editor: "0" - when clicked -00', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-minus'));
+        fireEvent.click(wrapper.getByTestId('numpad-0'));
+        fireEvent.click(wrapper.getByTestId('numpad-0'));
+        expect(memory).toHaveTextContent(/^-0$/);
+        expect(editor).toHaveTextContent(/^0$/);
+      });
+
+      test('memory: "-3", editor: "3" - when clicked -03', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-minus'));
+        fireEvent.click(wrapper.getByTestId('numpad-0'));
+        fireEvent.click(wrapper.getByTestId('numpad-3'));
+        expect(memory).toHaveTextContent(/^-3$/);
+        expect(editor).toHaveTextContent(/^3$/);
+      });
+
+      test('memory: "-30", editor: "30" - when clicked -030', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-minus'));
+        fireEvent.click(wrapper.getByTestId('numpad-0'));
+        fireEvent.click(wrapper.getByTestId('numpad-3'));
+        fireEvent.click(wrapper.getByTestId('numpad-0'));
+        expect(memory).toHaveTextContent(/^-30$/);
+        expect(editor).toHaveTextContent(/^30$/);
+      });
+
       test('memory: "-0.", editor: "0." - when clicked -.', () => {
         fireEvent.click(wrapper.getByTestId('numpad-minus'));
         fireEvent.click(wrapper.getByTestId('numpad-dot'));
@@ -221,25 +253,42 @@ describe('calculator input tests', () => {
         expect(editor).toHaveTextContent(/^6.2$/);
       });
 
-      test.skip('memory: "/", editor: "/" - when clicked - /', () => {
-        fireEvent.click(wrapper.getByTestId('numpad-minus'));
-        fireEvent.click(wrapper.getByTestId('numpad-divide'));
-        // expect(memory).toHaveTextContent(/^/');
-        // expect(editor).toHaveTextContent(/^/');
-      });
-
-      test.skip('memory: "+", editor: "+" - when clicked - +', () => {
+      test('memory: "+", editor: "+" - when clicked - +', () => {
         fireEvent.click(wrapper.getByTestId('numpad-minus'));
         fireEvent.click(wrapper.getByTestId('numpad-plus'));
-        expect(memory).toHaveTextContent(/^+$/);
-        expect(editor).toHaveTextContent(/^+$/);
+        expect(memory).toHaveTextContent(/^\+$/);
+        expect(editor).toHaveTextContent(/^\+$/);
       });
 
-      test.skip('memory: "/", editor: "/" - when clicked - /', () => {
+      test('memory: "+", editor: "+" - when clicked + + +', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-plus'));
+        fireEvent.click(wrapper.getByTestId('numpad-plus'));
+        fireEvent.click(wrapper.getByTestId('numpad-plus'));
+        expect(memory).toHaveTextContent(/^\+$/);
+        expect(editor).toHaveTextContent(/^\+$/);
+      });
+
+      test('memory: "*", editor: "*" - when clicked * * *', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+        fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+        fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+        expect(memory).toHaveTextContent(/^\*$/);
+        expect(editor).toHaveTextContent(/^\*$/);
+      });
+
+      test('memory: "/", editor: "/" - when clicked / / /', () => {
+        fireEvent.click(wrapper.getByTestId('numpad-divide'));
+        fireEvent.click(wrapper.getByTestId('numpad-divide'));
+        fireEvent.click(wrapper.getByTestId('numpad-divide'));
+        expect(memory).toHaveTextContent(/^\/$/);
+        expect(editor).toHaveTextContent(/^\/$/);
+      });
+
+      test('memory: "/", editor: "/" - when clicked - /', () => {
         fireEvent.click(wrapper.getByTestId('numpad-minus'));
         fireEvent.click(wrapper.getByTestId('numpad-divide'));
-        // expect(memory).toHaveTextContent(/^/');
-        // expect(editor).toHaveTextContent(/^/');
+        expect(memory).toHaveTextContent(/^\/$/);
+        expect(editor).toHaveTextContent(/^\/$/);
       });
 
       test.skip('memory: "*", editor: "*" - when clicked - *', () => {
@@ -247,28 +296,6 @@ describe('calculator input tests', () => {
         fireEvent.click(wrapper.getByTestId('numpad-multiplication'));
         expect(memory).toHaveTextContent(/^*$/);
         expect(editor).toHaveTextContent(/^*$/);
-      });
-
-      test.skip('memory: "66-", editor: "-" - when clicked 66- ', () => {
-        fireEvent.click(wrapper.getByTestId('numpad-6'));
-        fireEvent.click(wrapper.getByTestId('numpad-6'));
-        fireEvent.click(wrapper.getByTestId('numpad-minus'));
-        expect(memory).toHaveTextContent(/^66-$/);
-        expect(editor).toHaveTextContent(/^-$/);
-      });
-
-      test.skip('memory: "0-", editor: "-" - when clicked 0- ', () => {
-        fireEvent.click(wrapper.getByTestId('numpad-0'));
-        fireEvent.click(wrapper.getByTestId('numpad-minus'));
-        expect(memory).toHaveTextContent(/^0-$/);
-        expect(editor).toHaveTextContent(/^-$/);
-      });
-
-      test.skip('memory: "=NAN", editor: "NAN" - when clicked - =', () => {
-        fireEvent.click(wrapper.getByTestId('numpad-minus'));
-        fireEvent.click(wrapper.getByTestId('numpad-equal'));
-        expect(memory).toHaveTextContent(/^=NAN$/);
-        expect(editor).toHaveTextContent(/^NAN$/);
       });
     });
   });

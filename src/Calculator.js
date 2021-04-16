@@ -18,11 +18,11 @@ function hasDot(key, state) {
         memory: [...state.editor, key],
         editor: [...state.editor, key],
       };
-    } else if (state.editor[0] === '-') {
+    } else if (state.editor[0] === state.hasOperatorFirst) {
       return {
         ...state,
         hasDot: true,
-        memory: [...['-', '0'], key],
+        memory: [...[state.hasOperatorFirst, '0'], key],
         editor: [0, key],
       };
     } else {
@@ -39,19 +39,26 @@ function hasDot(key, state) {
 }
 
 function addNum(key, state) {
-  if (state.editor[0] === '0' && state.editor.length === 1) {
+  if (state.editor[0] === 0 && state.editor.length === 1) {
     let newMemory = [...state.memory];
     let newEditor = [...state.editor];
-    newMemory = [key];
-    if (key !== 0) {
+
+    if (!state.hasOperatorFirst) {
+      newMemory = [key];
+      if (key !== 0) {
+        newEditor = [key];
+      }
+    } else {
+      newMemory = [state.hasOperatorFirst, key];
       newEditor = [key];
     }
+
     return {
       ...state,
       memory: [...newMemory],
       editor: [...newEditor],
     };
-  } else if (state.editor[0] === '-') {
+  } else if (state.editor[0] === state.hasOperatorFirst) {
     return {
       ...state,
       memory: [...state.memory, key],
@@ -66,21 +73,28 @@ function addNum(key, state) {
   }
 }
 
-function addMinus(key, state) {
+function addOperator(key, state) {
   //az elejen lekezelni az edge case eket a vegen pedig elkuldeni muveletre
-  if (state.editor[0] === '-' && state.memory[0] === '-') {
+  // if (state.editor[0] === state.hasOperatorFirst && state.memory[0] === state.hasOperatorFirst) {
+  if (state.hasOperatorFirst) {
+    return {
+      hasOperatorFirst: key,
+      ...state,
+      memory: [key],
+      editor: [key],
+    };
+  } else if (state.editor[0] === 0 && state.editor.length === 1 && state.memory.length === 0) {
     return {
       ...state,
-    };
-  } else if (state.editor[0] === '0' && state.editor.length === 1 && state.memory.length === 0) {
-    return {
+      hasOperatorFirst: key,
       memory: [key],
       editor: [key],
     };
   } else {
-    console.log('minus operation');
+    console.log(key + 'operation');
     return {
       ...state,
+      hasOperatorFirst: undefined,
     };
   }
 }
@@ -97,16 +111,16 @@ function reducer(state, action) {
       return hasDot(action.payload, state);
 
     case actionTypes.MINUS:
-      return addMinus(action.payload, state);
+      return addOperator(action.payload, state);
 
     case actionTypes.PLUS:
-      return { ...state };
+      return addOperator(action.payload, state);
 
     case actionTypes.DIVIDE:
-      return { ...state };
+      return addOperator(action.payload, state);
 
     case actionTypes.MULTIPLY:
-      return { ...state };
+      return addOperator(action.payload, state);
 
     case actionTypes.EQUAL:
       return { ...state };
