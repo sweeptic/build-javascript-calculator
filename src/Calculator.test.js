@@ -191,10 +191,21 @@ describe('calculator input tests', () => {
       expect(editor).toHaveTextContent(/^-$/);
     });
 
-    test('memory: "-0", editor: "0" - when clicked -0', () => {
+    test('memory: "0", editor: "0" - when clicked -0', () => {
       fireEvent.click(wrapper.getByTestId('numpad-minus'));
       fireEvent.click(wrapper.getByTestId('numpad-0'));
-      expect(memory).toHaveTextContent(/^-0$/);
+      expect(memory).toHaveTextContent(/^0$/);
+      expect(editor).toHaveTextContent(/^0$/);
+    });
+
+    test('memory: "0-0-0", editor: "0" - when clicked 0-0-0', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      expect(memory).toHaveTextContent(/^0-0-0$/);
       expect(editor).toHaveTextContent(/^0$/);
     });
 

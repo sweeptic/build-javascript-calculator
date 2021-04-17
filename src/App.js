@@ -4,10 +4,10 @@ import Calculator from './Calculator';
 export const initialState = {
   editor: [0],
   memory: [],
-  hasDot: false,
   hasOperatorFirst: undefined,
   editorHasValue: false,
   preCursor: false,
+  calculationDone: false,
 };
 
 function App() {
