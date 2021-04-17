@@ -22,8 +22,6 @@ function addDot(key, state) {
     if (newState.editor.length === 1 && newState.editor[0] === 0) {
       newState.editor = '0';
     }
-    console.log('x');
-
     return {
       ...newState,
       editorNumericValue: true,
@@ -83,7 +81,6 @@ function addNum(key, state) {
   }
 
   //press key 1-9
-  const editorValue = [+[...newState.editor].join('')];
   if (newState.editorNumericValue) {
     return {
       ...newState,
@@ -112,7 +109,6 @@ function addOperator(key, state) {
     let onlyLastOperator = [...newState.editor]; //
     onlyLastOperator.pop();
     onlyLastOperator.push(key);
-
     return {
       ...newState,
       editor: [...onlyLastOperator],
