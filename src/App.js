@@ -6,8 +6,12 @@ export const initialState = {
   memory: [],
   hasOperatorFirst: undefined,
   editorHasValue: false,
+  memoryHasValue: false,
   preCursor: false,
   calculationDone: false,
+  editorNumericValue: false,
+  editorHasDot: false,
+  memoryIsEmpty: true,
 };
 
 function App() {

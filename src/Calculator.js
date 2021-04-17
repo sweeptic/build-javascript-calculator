@@ -9,237 +9,138 @@ function init(initialState) {
   return initialState;
 }
 
-function hasDot(key, state) {
-  const newState = { ...state, editorHasValue: true };
+function addDot(key, state) {
+  let newState = { ...state };
 
-  if (state.calculationDone) {
+  //accept dot once
+  if (!newState.editorHasDot) {
+    newState.editorHasDot = true;
+  } else return { ...newState };
+
+  if ((!newState.editorNumericValue && newState.memoryIsEmpty) || newState.editorNumericValue) {
+    //delete first 0 at initial state
+    if (newState.editor.length === 1 && newState.editor[0] === 0) {
+      newState.editor = '0';
+    }
+    console.log('x');
+
     return {
       ...newState,
-      hasDot: true,
-      memory: [0, key],
-      editor: [0, key],
-      calculationDone: false,
+      editorNumericValue: true,
+      editor: [...newState.editor, key],
     };
   }
 
-  if (!state.hasDot) {
-    //
-    // 0.3+6=0.9
-
-    if (state.memory.length === 0) {
-      return {
-        ...newState,
-        hasDot: true,
-        memory: [...state.editor, key],
-        editor: [...state.editor, key],
-      };
-    } else if (state.editor[0] === state.hasOperatorFirst) {
-      return {
-        ...newState,
-        hasDot: true,
-        memory: [...[...state.memory, 0], key],
-        editor: [0, key],
-      };
-    } else {
-      return {
-        ...newState,
-        hasDot: true,
-        memory: [...state.memory, key],
-        editor: [...state.editor, key],
-      };
-    }
-  } else {
-    return { ...newState };
+  if (!newState.editorNumericValue && !newState.memoryIsEmpty) {
+    return {
+      ...newState,
+      editorNumericValue: true,
+      memory: [...newState.memory, ...newState.editor],
+      editor: '0.',
+    };
   }
+
+  return {
+    ...newState,
+  };
 }
 
 function addNum(key, state) {
-  // console.log(state.memory);
-  // const joinedMemory = [+[...state.memory, key].join('')];
+  // add other value
+  let newState = { ...state };
 
-  //?
-  const newState = { ...state, editorHasValue: true, preCursor: false };
-  const cursedMemory = [...state.memory];
-  const precursed_key = state.preCursor ? key * -1 : key;
-
-  if (state.calculationDone) {
+  if (newState.editor.length === 1 && newState.editor[0] === 0 && key === 0) {
     return {
       ...newState,
-      memory: [key],
-      editor: [key],
-      calculationDone: false,
     };
   }
 
-  if (state.editor[0] === 0 && state.editor.length === 1) {
-    let newMemory = [...state.memory];
-    let newEditor = [...state.editor];
-
-    if (!state.hasOperatorFirst) {
-      newMemory = [key];
-      if (key !== 0) {
-        newEditor = [key];
-      }
-    } else {
-      // TODO HERE
-
-      // -06-9= --3
-      // 27--6= 213
-      // -0.6-9= -0.-3
-
-      newMemory = [state.hasOperatorFirst, key];
-      newEditor = [key];
-    }
-
-    // first value
+  if (!newState.memoryIsEmpty && !newState.editorNumericValue) {
     return {
       ...newState,
-      memory: [...newMemory],
-      editor: [...newEditor],
-    };
-  } else if (state.editor[0] === state.hasOperatorFirst) {
-    if (state.preCursor) {
-      cursedMemory.pop();
-    }
-
-    // case of minus
-    return {
-      ...newState,
-      memory: [...cursedMemory, precursed_key],
+      memory: [...newState.memory, ...newState.editor],
+      editorNumericValue: true,
       editor: [key],
     };
-  } else {
-    // add other value
+  }
 
-    // const x = [+[...state.memory, key].join('')];
-    // console.log(x);
-    // console.log([...state.memory, key]);
+  if (!newState.memoryIsEmpty && newState.editorNumericValue) {
+    if (newState.editor.length === 1 && newState.editor[0] === 0) {
+      return {
+        ...newState,
+        editor: [key],
+      };
+    }
+  }
 
+  //default state.
+  if (!newState.editorNumericValue && key !== 0) {
     return {
       ...newState,
-      memory: [...state.memory, key],
-      editor: [...state.editor, key],
+      editorNumericValue: true,
+      editor: [key],
     };
   }
+
+  //press key 1-9
+  const editorValue = [+[...newState.editor].join('')];
+  if (newState.editorNumericValue) {
+    return {
+      ...newState,
+      editorNumericValue: true,
+      editor: [...newState.editor, key],
+    };
+  }
+
+  return {
+    ...newState,
+  };
 }
 
 function addOperator(key, state) {
-  //cancel / and * in the beginning
-  if (state.memory.length === 0 && !state.editorHasValue && (key === '/' || key === '*')) {
+  let newState = { ...state };
+
+  //put operator front of numbers, except first value
+  if (!newState.editorNumericValue && newState.memoryIsEmpty) {
     return {
-      ...state,
-    };
-  }
-
-  if (state.calculationDone) {
-    console.log('x', state.editor);
-
-    return {
-      ...state,
-      hasDot: false,
-      memory: [...state.editor, key],
-      editor: [key],
-      calculationDone: false,
-    };
-  }
-
-  if (state.editorHasValue) {
-    return {
-      ...state,
-      hasDot: false,
-      editorHasValue: false,
-      hasOperatorFirst: key,
-      memory: [...state.memory, key],
-      editor: [key],
-    };
-  } else {
-    const newMemory = [...state.memory];
-
-    let preCursor = false;
-
-    if (!state.editorHasValue && key === '-') {
-      // put precursor if we need negative value
-      preCursor = true;
-    } else {
-      //we can change operator
-      newMemory.pop();
-    }
-
-    // remove precursor if change operator
-    if (state.preCursor) {
-      newMemory.pop();
-    }
-
-    return {
-      ...state,
-      preCursor: preCursor,
-      hasOperatorFirst: key,
-      memory: [...newMemory, key],
+      ...newState,
       editor: [key],
     };
   }
-}
 
-function operatorReducer(array, operator) {
-  const wArray = [...array];
-  for (let index = 0; index < wArray.length; index++) {
-    if (wArray[index + 1] === operator) {
-      let value;
-      switch (operator) {
-        case '*':
-          value = wArray[index] * wArray[index + 2];
-          break;
-        case '/':
-          value = wArray[index] / wArray[index + 2];
-          break;
-        case '+':
-          value = wArray[index] + wArray[index + 2];
-          break;
-        case '-':
-          value = wArray[index] - wArray[index + 2];
-          break;
+  if (!newState.editorNumericValue && !newState.memoryIsEmpty) {
+    let onlyLastOperator = [...newState.editor]; //
+    onlyLastOperator.pop();
+    onlyLastOperator.push(key);
 
-        default:
-      }
-
-      wArray.splice(index, 3, value);
-      index--;
-    }
+    return {
+      ...newState,
+      editor: [...onlyLastOperator],
+    };
   }
-  return wArray;
+
+  if (newState.editorNumericValue) {
+    return {
+      ...newState,
+      memory: [...newState.memory, +[...newState.editor].join('')],
+      editor: [key],
+      editorHasDot: false,
+      editorNumericValue: false,
+      memoryIsEmpty: false,
+    };
+  }
+
+  return {
+    ...state,
+  };
 }
 
 function equal(key, state) {
   console.log(state.memory);
 
-  // const convertedMemory = [+[...state.memory].join('')];
-  // console.log(convertedMemory);
-
-  if (!state.editorHasValue) {
-    return {
-      ...state,
-      memory: ['=NAN'],
-      editor: ['NAN'],
-    };
-  } else if (!state.calculationDone) {
-    const result1 = operatorReducer([...state.memory], '*');
-    const result2 = operatorReducer(result1, '/');
-    const result3 = operatorReducer(result2, '+');
-    const result4 = operatorReducer(result3, '-');
-
-    console.log(result4);
-
-    return {
-      ...state,
-      calculationDone: true,
-      memory: [...state.memory, '= ', result4],
-      editor: [...result4],
-    };
-  } else {
-    return {
-      ...state,
-    };
-  }
+  return {
+    ...state,
+  };
 }
 
 function reducer(state, action) {
@@ -251,7 +152,7 @@ function reducer(state, action) {
       return init(action.payload);
 
     case actionTypes.DOT:
-      return hasDot(action.payload, state);
+      return addDot(action.payload, state);
 
     case actionTypes.MINUS:
       return addOperator(action.payload, state);
