@@ -28,48 +28,59 @@ function addNum(key, state) {
 function addOperator(key, state) {
   let newState = deepCopyState(state);
 
+  // if editor has value and press operator
+  if (newState.editor.some(e => /\d+/g.test(e))) {
+    console.log('put memory');
+
+    let newKey = '';
+
+    if (newState.memory.length !== 0) {
+      newKey = newState.editor.shift();
+    }
+
+    return {
+      ...newState,
+      editor: key,
+      memory: [...newState.memory, ...newKey, +[newState.editor.join('')]],
+    };
+  }
+
   //if memory has no data
   if (newState.memory.length === 0) {
-    //ready to put value to memory
-    if (newState.editor.some(e => /\d+/g.test(e))) {
-      console.log('put memory');
-    } else {
-      //can type - or (+) precursor
-      if (key === '-') {
-        return {
-          ...newState,
-          editor: [key],
-        };
-      }
-      if (key === '+') {
-        return {
-          ...newState,
-          editor: [],
-        };
-      }
+    //can type - or (+) precursor
+    if (key === '-') {
+      return {
+        ...newState,
+        editor: [key],
+      };
     }
+    if (key === '+') {
+      return {
+        ...newState,
+        editor: [],
+      };
+    }
+    // }
   }
+
   //if memory has data
-  else {
-    //ready to put value to memory
-    if (newState.editor.some(e => /\d+/g.test(e))) {
-      console.log('put memory');
+  if (newState.memory.length !== 0) {
+    // can type + - * / *- /- +- -- operator and precursor
+    if (newState.editor.length === 1 && key === '-') {
+      return {
+        ...newState,
+        editor: [...newState.editor, key],
+      };
     } else {
-      // can type + - * / *- /- +- -- operator and precursor
-      if (newState.editor.length === 1 && key === '-') {
-        return {
-          ...newState,
-          editor: [...newState.editor, key],
-        };
-      } else {
-        return {
-          ...newState,
-          editor: [key],
-        };
-      }
+      return {
+        ...newState,
+        editor: [key],
+      };
+      // }
     }
   }
 
+  console.log('handle unsupported cases');
   return {
     ...newState,
   };
