@@ -10,7 +10,7 @@ function init(initialState) {
 }
 
 function addDot(key, state) {
-  let newState = { ...state };
+  let newState = { ...state, memory: [...state.memory], editor: [...state.editor] };
 
   //accept dot once
   if (!newState.editorHasDot) {
@@ -45,7 +45,7 @@ function addDot(key, state) {
 
 function addNum(key, state) {
   // add other value
-  let newState = { ...state };
+  let newState = { ...state, memory: [...state.memory], editor: [...state.editor] };
 
   if (newState.editor.length === 1 && newState.editor[0] === 0 && key === 0) {
     return {
@@ -73,8 +73,10 @@ function addNum(key, state) {
 
   //default state.
   if (!newState.editorNumericValue && key !== 0) {
+    // console.log('x');
     return {
       ...newState,
+      memory: newState.editor,
       editorNumericValue: true,
       editor: [key],
     };
@@ -95,47 +97,75 @@ function addNum(key, state) {
 }
 
 function addOperator(key, state) {
-  let newState = { ...state };
+  let newState = { ...state, memory: [...state.memory], editor: [...state.editor] };
 
   //put operator front of numbers, except first value
-  if (!newState.editorNumericValue && newState.memoryIsEmpty) {
-    return {
-      ...newState,
-      editor: [key],
-    };
-  }
+  if ((!newState.editorNumericValue && newState.memoryIsEmpty) || !newState.editorNumericValue) {
+    //case when minus minus
+    if (key === '-' && newState.editor[0] === '-' && !newState.memoryIsEmpty) {
+      if (newState.editor.length === 1) {
+        return {
+          ...newState,
+          editor: [...newState.editor, key],
+        };
+      }
+    } else {
+      if (key === '-') {
+        console.log('minus');
+        return {
+          ...newState,
+          editor: [key],
+          minusValue: true,
+        };
+      }
 
-  if (!newState.editorNumericValue && !newState.memoryIsEmpty) {
-    let onlyLastOperator = [...newState.editor]; //
-    onlyLastOperator.pop();
-    onlyLastOperator.push(key);
-    return {
-      ...newState,
-      editor: [...onlyLastOperator],
-    };
+      console.log('plus');
+      return {
+        ...newState,
+        editor: [key],
+        minusValue: false,
+      };
+    }
   }
 
   if (newState.editorNumericValue) {
+    let handleNum = +[...newState.editor].join('');
+
+    // handle --
+    if (newState.memory.slice(-2).join('') === '--') {
+      handleNum = handleNum * -1;
+      newState.memory.pop();
+    }
+
+    if (newState.minusValue) {
+      console.log('x');
+      handleNum = handleNum * -1;
+      newState.memory.pop();
+    }
+
     return {
       ...newState,
-      memory: [...newState.memory, +[...newState.editor].join('')],
+      memory: [...newState.memory, handleNum],
       editor: [key],
       editorHasDot: false,
       editorNumericValue: false,
       memoryIsEmpty: false,
+      minusValue: false,
     };
   }
 
   return {
-    ...state,
+    ...newState,
   };
 }
 
 function equal(key, state) {
-  console.log(state.memory);
+  let newState = { ...state, memory: [...state.memory], editor: [...state.editor] };
+
+  console.log(newState.memory);
 
   return {
-    ...state,
+    ...newState,
   };
 }
 

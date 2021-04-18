@@ -7,7 +7,7 @@ export const initialState = {
   hasOperatorFirst: undefined,
   editorHasValue: false,
   memoryHasValue: false,
-  preCursor: false,
+  minusValue: false,
   calculationDone: false,
   editorNumericValue: false,
   editorHasDot: false,
