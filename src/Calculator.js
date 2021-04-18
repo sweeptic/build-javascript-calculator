@@ -12,6 +12,27 @@ function init(initialState) {
 
 function addDot(key, state) {
   let newState = deepCopyState(state);
+  console.log(newState.editor);
+
+  if (newState.editor.length === 0) {
+    return {
+      ...newState,
+      editor: [0, key],
+    };
+  } else if (newState.editor[0] === '-' && newState.editor.length === 1) {
+    return {
+      ...newState,
+      editor: [...newState.editor, 0, key],
+    };
+  } else if (!newState.editor.some(e => /\./g.test(e))) {
+    return {
+      ...newState,
+      editor: [...newState.editor, key],
+    };
+  }
+
+  console.log('only one . allowed');
+
   return {
     ...newState,
   };
