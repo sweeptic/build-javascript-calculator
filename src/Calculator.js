@@ -12,34 +12,49 @@ function init(initialState) {
 
 function addDot(key, state) {
   let newState = deepCopyState(state);
-  console.log(newState.editor);
+  // console.log(newState.editor);
 
-  if (newState.editor.length === 0) {
+  if (newState.editor.some(e => /\./g.test(e))) {
+    return {
+      ...newState,
+    };
+  }
+
+  //reset calculator
+  //same as addnum.. outsource into function
+  if (newState.memory.some(e => /=+/g.test(e))) {
     return {
       ...newState,
       editor: [0, key],
+      memory: [],
     };
-  } else if (newState.editor[0] === '-' && newState.editor.length === 1) {
+  }
+
+  if (!newState.editor.some(e => /\d+/g.test(e))) {
     return {
       ...newState,
       editor: [...newState.editor, 0, key],
     };
-  } else if (!newState.editor.some(e => /\./g.test(e))) {
-    return {
-      ...newState,
-      editor: [...newState.editor, key],
-    };
   }
-
-  console.log('only one . allowed');
 
   return {
     ...newState,
+    editor: [...newState.editor, key],
   };
 }
 
 function addNum(key, state) {
   let newState = deepCopyState(state);
+
+  //reset calculator
+  if (newState.memory.some(e => /=+/g.test(e))) {
+    return {
+      ...newState,
+      editor: [key],
+      memory: [],
+    };
+  }
+
   return {
     ...newState,
     editor: [...newState.editor, key],
@@ -48,6 +63,15 @@ function addNum(key, state) {
 
 function addOperator(key, state) {
   let newState = deepCopyState(state);
+
+  if (newState.memory.some(e => /=+/g.test(e))) {
+    console.log('reset');
+    return {
+      ...newState,
+      memory: newState.editor,
+      editor: key,
+    };
+  }
 
   // if editor has value and press operator
   if (newState.editor.some(e => /\d+/g.test(e))) {
@@ -107,17 +131,67 @@ function addOperator(key, state) {
   };
 }
 
+function operatorReducer(array, operator) {
+  const wArray = [...array];
+
+  for (let index = 0; index < wArray.length; index++) {
+    if (wArray[index + 1] === operator) {
+      let value;
+      switch (operator) {
+        case '*':
+          value = wArray[index] * wArray[index + 2];
+          break;
+        case '/':
+          value = wArray[index] / wArray[index + 2];
+          break;
+        case '+':
+          value = wArray[index] + wArray[index + 2];
+          break;
+        case '-':
+          value = wArray[index] - wArray[index + 2];
+          break;
+
+        default:
+      }
+
+      wArray.splice(index, 3, value);
+      index--;
+    }
+  }
+  return wArray;
+}
+
 function equal(key, state) {
+  let newKey = '';
+  let remainingValue = [];
   let newState = {
     ...state,
     memory: [...state.memory],
     editor: [...state.editor],
   };
 
-  console.log(newState.memory);
+  if (newState.editor.some(e => /\d+/g.test(e))) {
+    if (newState.memory.length !== 0) {
+      newKey = newState.editor.shift();
+    }
+    remainingValue.push(+[newState.editor.join('')]);
+  }
+
+  let letsCalculateValue = [...newState.memory, ...newKey, ...remainingValue];
+
+  console.log(letsCalculateValue);
+
+  const result1 = operatorReducer([...letsCalculateValue], '*');
+  const result2 = operatorReducer(result1, '/');
+  const result3 = operatorReducer(result2, '+');
+  const result4 = operatorReducer(result3, '-');
+
+  console.log('result: ', result4);
 
   return {
     ...newState,
+    editor: [result4],
+    memory: [...letsCalculateValue, key],
   };
 }
 
