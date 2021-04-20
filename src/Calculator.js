@@ -54,45 +54,18 @@ function addNum(key, state) {
     };
   }
 
-  /*
-  if (newState.editor.slice(-2).join('') === '-0' || && key === 0) {
-    if (key !==0) {
-      newState.editor.pop();
-      newState.editor.push(key);
+  if (
+    newState.editor
+      .slice(-2)
+      .join('')
+      .match(/([/*+-][0])/)
+  ) {
+    if (key !== 0) {
+      newState.editor.splice(-1, 1, key);
     }
-    return {
-      ...newState,
-    };
-  }
-*/
-
-  // reject 0 when editor is -0
-  if (
-    (newState.editor.slice(-2).join('') === '-0' ||
-      newState.editor.slice(-2).join('') === '+0' ||
-      newState.editor.slice(-2).join('') === '*0' ||
-      newState.editor.slice(-2).join('') === '/0') &&
-    key === 0
-  ) {
-    return {
-      ...newState,
-    };
-  }
-
-  // +0 *0 /0 ...
-  if (
-    (newState.editor.slice(-2).join('') === '-0' ||
-      newState.editor.slice(-2).join('') === '+0' ||
-      newState.editor.slice(-2).join('') === '*0' ||
-      newState.editor.slice(-2).join('') === '/0') &&
-    key !== 0
-  ) {
-    console.log('change 0 to key');
-    newState.editor.pop();
 
     return {
       ...newState,
-      editor: [...newState.editor, key],
     };
   }
 
