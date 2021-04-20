@@ -13,7 +13,7 @@ const Display = ({ state }) => {
           id='display'
           data-testid={'editor-element'}
           className={styles.editor}>
-          {state.editor}
+          {state.editor.length === 0 ? 0 : state.editor}
         </span>
       </div>
     </>

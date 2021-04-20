@@ -235,4 +235,150 @@ describe('calculator input tests', () => {
       expect(editor).toHaveTextContent(/^-6.2$/);
     });
   });
+
+  describe('calculator functionality', () => {
+    test('renders 2 when clicked 1+1', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^2$/);
+    });
+    test('renders 9 when clicked 5+4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^9$/);
+    });
+    test('renders -1 when clicked -5+4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^-1$/);
+    });
+    test('renders -1 when clicked -5++4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^-1$/);
+    });
+    test('renders -1 when clicked -5--4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^-1$/);
+    });
+    test('renders -1 when clicked --5--4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^-1$/);
+    });
+    test('renders -9 when clicked -5+-4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^-9$/);
+    });
+    test('renders 20 when clicked -5*-4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^20$/);
+    });
+    test('renders 20 when clicked -5*-4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^20$/);
+    });
+    test('renders -20 when clicked -5*4', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^-20$/);
+    });
+    test('renders 1 when clicked 5*4/5*2+2-9', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-divide'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-multiply'));
+      fireEvent.click(wrapper.getByTestId('numpad-2'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-2'));
+      fireEvent.click(wrapper.getByTestId('numpad-minus'));
+      fireEvent.click(wrapper.getByTestId('numpad-9'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^1$/);
+    });
+    test('renders 6 when clicked 1+2+3', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-2'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-3'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^6$/);
+    });
+    test('renders 9 when clicked 1+2+3=9', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-2'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-3'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      fireEvent.click(wrapper.getByTestId('numpad-9'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^9$/);
+    });
+    test('renders 15 when clicked 1+2+3=+9', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-2'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-3'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-9'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^15$/);
+    });
+    test('renders 10 when clicked 5.5+4.5', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-dot'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-dot'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-equal'));
+      expect(editor).toHaveTextContent(/^10$/);
+    });
+  });
 });
