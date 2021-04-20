@@ -1,11 +1,11 @@
 .app {
   font-family: 'Orbitron', sans-serif;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(128, 128, 128, 0.24);
   flex-flow: column;
+  background-color: rgba(128, 128, 128, 0.24);
 }
 
 h1 {

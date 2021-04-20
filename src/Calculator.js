@@ -46,6 +46,14 @@ function addDot(key, state) {
 function addNum(key, state) {
   let newState = deepCopyState(state);
 
+  // reject 0 when editor is 0
+  if (newState.editor.length === 1 && newState.editor[0] === 0) {
+    return {
+      ...newState,
+      editor: [key],
+    };
+  }
+
   //reset calculator
   if (newState.memory.some(e => /=+/g.test(e))) {
     return {
@@ -55,6 +63,7 @@ function addNum(key, state) {
     };
   }
 
+  //all other numpad value allowed
   return {
     ...newState,
     editor: [...newState.editor, key],
@@ -65,7 +74,7 @@ function addOperator(key, state) {
   let newState = deepCopyState(state);
 
   if (newState.memory.some(e => /=+/g.test(e))) {
-    console.log('reset');
+    console.log('x');
     return {
       ...newState,
       memory: newState.editor,
@@ -75,7 +84,7 @@ function addOperator(key, state) {
 
   // if editor has value and press operator
   if (newState.editor.some(e => /\d+/g.test(e))) {
-    console.log('put memory');
+    // console.log('put memory');
 
     let newKey = '';
 
@@ -131,34 +140,27 @@ function addOperator(key, state) {
   };
 }
 
-function operatorReducer(array, operator) {
-  const wArray = [...array];
-
-  for (let index = 0; index < wArray.length; index++) {
-    if (wArray[index + 1] === operator) {
-      let value;
-      switch (operator) {
-        case '*':
-          value = wArray[index] * wArray[index + 2];
-          break;
-        case '/':
-          value = wArray[index] / wArray[index + 2];
-          break;
+function operatorReducer(array) {
+  return [...array].reduce((acc, item, index, arr) => {
+    if (item.toString().match(/\+|-|\*|\//)) {
+      switch (item) {
         case '+':
-          value = wArray[index] + wArray[index + 2];
+          acc = acc + arr[index + 1];
           break;
         case '-':
-          value = wArray[index] - wArray[index + 2];
+          acc = acc - arr[index + 1];
           break;
-
+        case '*':
+          acc = acc * arr[index + 1];
+          break;
+        case '/':
+          acc = acc / arr[index + 1];
+          break;
         default:
       }
-
-      wArray.splice(index, 3, value);
-      index--;
     }
-  }
-  return wArray;
+    return acc;
+  }, array[0]);
 }
 
 function equal(key, state) {
@@ -170,6 +172,12 @@ function equal(key, state) {
     editor: [...state.editor],
   };
 
+  if (newState.memory.some(e => /=+/g.test(e))) {
+    return {
+      ...newState,
+    };
+  }
+
   if (newState.editor.some(e => /\d+/g.test(e))) {
     if (newState.memory.length !== 0) {
       newKey = newState.editor.shift();
@@ -179,18 +187,11 @@ function equal(key, state) {
 
   let letsCalculateValue = [...newState.memory, ...newKey, ...remainingValue];
 
-  console.log(letsCalculateValue);
-
-  const result1 = operatorReducer([...letsCalculateValue], '*');
-  const result2 = operatorReducer(result1, '/');
-  const result3 = operatorReducer(result2, '+');
-  const result4 = operatorReducer(result3, '-');
-
-  console.log('result: ', result4);
+  const result = operatorReducer([...letsCalculateValue]);
 
   return {
     ...newState,
-    editor: [result4],
+    editor: [result],
     memory: [...letsCalculateValue, key],
   };
 }
