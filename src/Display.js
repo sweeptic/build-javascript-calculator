@@ -4,7 +4,7 @@ import styles from './Calculator.module.css';
 const Display = ({ state }) => {
   return (
     <>
-      <div className={`${styles.display} ${styles.div1} `}>
+      <div className={`${styles.display} ${styles.layout_display} `}>
         <span data-testid={'memory-element'} className={styles.memory}>
           {state.memory}
           {state.editor}

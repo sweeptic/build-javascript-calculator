@@ -56,7 +56,7 @@
 }
 
 /* CSS grid layout */
-.div1 {
+.layout_display {
   grid-area: 1 / 1 / 2 / 5;
 }
 .layout_numpad_ac {
