@@ -5,10 +5,7 @@ const Display = ({ state }) => {
   return (
     <>
       <div className={`${styles.display} ${styles.div1} `}>
-        <span
-          // id='display'
-          data-testid={'memory-element'}
-          className={styles.memory}>
+        <span data-testid={'memory-element'} className={styles.memory}>
           {state.memory}
           {state.editor}
         </span>
