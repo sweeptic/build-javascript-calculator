@@ -237,6 +237,23 @@ describe('calculator input tests', () => {
   });
 
   describe('calculator functionality', () => {
+    test('renders 0 when clicked 1+000', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      expect(editor).toHaveTextContent(/^\+0$/);
+    });
+    test('renders 6 when clicked 1+0006', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-plus'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-0'));
+      fireEvent.click(wrapper.getByTestId('numpad-6'));
+      expect(editor).toHaveTextContent(/^\+6$/);
+    });
     test('renders 2 when clicked 1+1', () => {
       fireEvent.click(wrapper.getByTestId('numpad-1'));
       fireEvent.click(wrapper.getByTestId('numpad-plus'));

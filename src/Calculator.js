@@ -54,12 +54,45 @@ function addNum(key, state) {
     };
   }
 
-  if (newState.editor.slice(-2).join('') === '-0') {
-    if (key !== 0) {
-      newState.editor.splice(-1, 1, key);
+  /*
+  if (newState.editor.slice(-2).join('') === '-0' || && key === 0) {
+    if (key !==0) {
+      newState.editor.pop();
+      newState.editor.push(key);
     }
     return {
       ...newState,
+    };
+  }
+*/
+
+  // reject 0 when editor is -0
+  if (
+    (newState.editor.slice(-2).join('') === '-0' ||
+      newState.editor.slice(-2).join('') === '+0' ||
+      newState.editor.slice(-2).join('') === '*0' ||
+      newState.editor.slice(-2).join('') === '/0') &&
+    key === 0
+  ) {
+    return {
+      ...newState,
+    };
+  }
+
+  // +0 *0 /0 ...
+  if (
+    (newState.editor.slice(-2).join('') === '-0' ||
+      newState.editor.slice(-2).join('') === '+0' ||
+      newState.editor.slice(-2).join('') === '*0' ||
+      newState.editor.slice(-2).join('') === '/0') &&
+    key !== 0
+  ) {
+    console.log('change 0 to key');
+    newState.editor.pop();
+
+    return {
+      ...newState,
+      editor: [...newState.editor, key],
     };
   }
 
@@ -83,6 +116,7 @@ function addOperator(key, state) {
   let newState = deepCopyState(state);
 
   if (newState.memory.some(e => /=+/g.test(e))) {
+    console.log('x');
     return {
       ...newState,
       memory: newState.editor,
