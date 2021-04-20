@@ -47,20 +47,27 @@ function addNum(key, state) {
   let newState = deepCopyState(state);
 
   // reject 0 when editor is 0
-  if (newState.editor.length === 1 && newState.editor[0] === 0) {
+  if (newState.editor.join('') === '0') {
     return {
       ...newState,
       editor: [key],
     };
   }
 
-  // reject 0 when editor is -0 (memory has value)
-  if (
-    newState.editor.length === 2 &&
-    newState.editor.slice(0, 2).join('') === '-0'
-  ) {
+  // reject 0 when editor is -0
+  if (newState.editor.slice(-2).join('') === '-0' && key === 0) {
     return {
       ...newState,
+    };
+  }
+
+  if (newState.editor.slice(-2).join('') === '-0' && key !== 0) {
+    console.log('change 0 to key');
+    newState.editor.pop();
+
+    return {
+      ...newState,
+      editor: [...newState.editor, key],
     };
   }
 
@@ -182,7 +189,10 @@ function equal(key, state) {
     editor: [...state.editor],
   };
 
-  if (newState.memory.some(e => /=+/g.test(e))) {
+  if (
+    !newState.editor.some(e => /\d+/g.test(e)) ||
+    newState.memory.some(e => /=+/g.test(e))
+  ) {
     return {
       ...newState,
     };

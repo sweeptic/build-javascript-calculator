@@ -14,6 +14,21 @@ describe('calculator input tests', () => {
   });
 
   describe('numpad test (only editor)', () => {
+    test('editor renders 0 initial value', () => {
+      expect(editor).toHaveTextContent(0);
+      // expect(element).toHaveTextContent(/^Text Content$/)
+    });
+
+    test('editor renders 0 and memory empty when clicked 12345 and AC', () => {
+      fireEvent.click(wrapper.getByTestId('numpad-1'));
+      fireEvent.click(wrapper.getByTestId('numpad-2'));
+      fireEvent.click(wrapper.getByTestId('numpad-3'));
+      fireEvent.click(wrapper.getByTestId('numpad-4'));
+      fireEvent.click(wrapper.getByTestId('numpad-5'));
+      fireEvent.click(wrapper.getByTestId('numpad-AC'));
+      expect(editor).toHaveTextContent(/^0$/);
+    });
+
     test('editor renders 12345 when clicked 12345', () => {
       fireEvent.click(wrapper.getByTestId('numpad-1'));
       fireEvent.click(wrapper.getByTestId('numpad-2'));
@@ -152,16 +167,6 @@ describe('calculator input tests', () => {
       fireEvent.click(wrapper.getByTestId('numpad-0'));
       expect(editor).toHaveTextContent(/^0.000$/);
     });
-
-    test('editor renders 0 and memory empty when clicked 12345 and AC', () => {
-      fireEvent.click(wrapper.getByTestId('numpad-1'));
-      fireEvent.click(wrapper.getByTestId('numpad-2'));
-      fireEvent.click(wrapper.getByTestId('numpad-3'));
-      fireEvent.click(wrapper.getByTestId('numpad-4'));
-      fireEvent.click(wrapper.getByTestId('numpad-5'));
-      fireEvent.click(wrapper.getByTestId('numpad-AC'));
-      expect(editor).toHaveTextContent(/^0$/);
-    });
   });
 
   describe('numpad minus tests', () => {
@@ -176,20 +181,20 @@ describe('calculator input tests', () => {
       expect(editor).toHaveTextContent(/^-0$/);
     });
 
-    test('editor: "0" when clicked -0123', () => {
+    test('editor: "-123" when clicked -0123', () => {
       fireEvent.click(wrapper.getByTestId('numpad-minus'));
       fireEvent.click(wrapper.getByTestId('numpad-0'));
       fireEvent.click(wrapper.getByTestId('numpad-1'));
       fireEvent.click(wrapper.getByTestId('numpad-2'));
       fireEvent.click(wrapper.getByTestId('numpad-3'));
-      expect(editor).toHaveTextContent(/^-0$/);
+      expect(editor).toHaveTextContent(/^-123$/);
     });
 
     test('editor: "-3"  when clicked -03', () => {
       fireEvent.click(wrapper.getByTestId('numpad-minus'));
       fireEvent.click(wrapper.getByTestId('numpad-0'));
       fireEvent.click(wrapper.getByTestId('numpad-3'));
-      expect(editor).toHaveTextContent(/^-0$/);
+      expect(editor).toHaveTextContent(/^-3$/);
     });
 
     test('editor: "-0." when clicked -.', () => {
@@ -209,10 +214,10 @@ describe('calculator input tests', () => {
       expect(editor).toHaveTextContent(/^-$/);
     });
 
-    test('editor: "--" when clicked - - ', () => {
+    test('editor: "-" when clicked - - ', () => {
       fireEvent.click(wrapper.getByTestId('numpad-minus'));
       fireEvent.click(wrapper.getByTestId('numpad-minus'));
-      expect(editor).toHaveTextContent(/^--$/);
+      expect(editor).toHaveTextContent(/^-$/);
     });
 
     test('editor: "-" when clicked - - -', () => {
