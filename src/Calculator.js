@@ -54,6 +54,16 @@ function addNum(key, state) {
     };
   }
 
+  // reject 0 when editor is -0 (memory has value)
+  if (
+    newState.editor.length === 2 &&
+    newState.editor.slice(0, 2).join('') === '-0'
+  ) {
+    return {
+      ...newState,
+    };
+  }
+
   //reset calculator
   if (newState.memory.some(e => /=+/g.test(e))) {
     return {
