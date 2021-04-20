@@ -2,7 +2,7 @@ import styles from './App.module.css';
 import Calculator from './Calculator';
 
 export const initialState = {
-  editor: [],
+  editor: [0],
   memory: [],
 };
 

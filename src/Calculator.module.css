@@ -13,12 +13,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 100px; */
-  /* height: 100px; */
   border: 1px black solid;
   background-color: grey;
   font-size: 1.3rem;
   color: aliceblue;
+  user-select: none;
 }
 
 .container > .numPad:hover {
@@ -53,6 +52,10 @@
 
 .numPadAc {
   background-color: rgba(0, 0, 0, 0.548) !important;
+}
+
+.numPadAc:hover {
+  background-color: rgba(0, 0, 0, 0.726) !important;
 }
 
 .div1 {
