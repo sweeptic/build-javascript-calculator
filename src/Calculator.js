@@ -12,16 +12,15 @@ function init(initialState) {
 
 function addDot(key, state) {
   let newState = deepCopyState(state);
-  // console.log(newState.editor);
 
+  //only one dot allowed.
   if (newState.editor.some(e => /\./g.test(e))) {
     return {
       ...newState,
     };
   }
 
-  //reset calculator
-  //same as addnum.. outsource into function
+  //reset calculator when calculation is done.
   if (newState.memory.some(e => /=+/g.test(e))) {
     return {
       ...newState,
@@ -30,6 +29,7 @@ function addDot(key, state) {
     };
   }
 
+  // when press '.' then editor convert to '.0'.
   if (!newState.editor.some(e => /\d+/g.test(e))) {
     return {
       ...newState,
@@ -37,6 +37,7 @@ function addDot(key, state) {
     };
   }
 
+  // this is the default behavior. can type any number
   return {
     ...newState,
     editor: [...newState.editor, key],
@@ -46,7 +47,7 @@ function addDot(key, state) {
 function addNum(key, state) {
   let newState = deepCopyState(state);
 
-  // reject 0 when editor is 0
+  // pass 0 when editor only contain 0
   if (newState.editor.join('') === '0') {
     return {
       ...newState,
@@ -54,6 +55,7 @@ function addNum(key, state) {
     };
   }
 
+  //don't pass 0 when editor has 'operator and 0' OR replace '0 to number'.
   if (
     newState.editor
       .slice(-2)
@@ -69,12 +71,12 @@ function addNum(key, state) {
     };
   }
 
-  //reset calculator
+  //reset calculator when calculation is done.
   if (newState.memory.some(e => /=+/g.test(e))) {
     return {
       ...newState,
-      editor: [key],
       memory: [],
+      editor: [key],
     };
   }
 
@@ -88,8 +90,8 @@ function addNum(key, state) {
 function addOperator(key, state) {
   let newState = deepCopyState(state);
 
+  // reset calculator when calculation is done.
   if (newState.memory.some(e => /=+/g.test(e))) {
-    console.log('x');
     return {
       ...newState,
       memory: newState.editor,
@@ -97,10 +99,8 @@ function addOperator(key, state) {
     };
   }
 
-  // if editor has value and press operator
+  // if editor has value and press operator then  put editor to memory
   if (newState.editor.some(e => /\d+/g.test(e))) {
-    // console.log('put memory');
-
     let newKey = '';
 
     if (newState.memory.length !== 0) {
@@ -129,12 +129,11 @@ function addOperator(key, state) {
         editor: [],
       };
     }
-    // }
   }
 
   //if memory has data
   if (newState.memory.length !== 0) {
-    // can type + - * / *- /- +- -- operator and precursor
+    // can type '+' '-' '*' '/' '*-' '/-' '+-' '--'
     if (newState.editor.length === 1 && key === '-') {
       return {
         ...newState,
@@ -145,11 +144,9 @@ function addOperator(key, state) {
         ...newState,
         editor: [key],
       };
-      // }
     }
   }
 
-  console.log('handle unsupported cases');
   return {
     ...newState,
   };
@@ -203,18 +200,18 @@ function equal(key, state) {
     remainingValue.push(+[newState.editor.join('')]);
   }
 
-  let letsCalculateValue = [...newState.memory, ...newKey, ...remainingValue];
+  let getCalculateValue = [...newState.memory, ...newKey, ...remainingValue];
 
-  const result = operatorReducer([...letsCalculateValue]);
+  const result = operatorReducer([...getCalculateValue]);
 
   return {
     ...newState,
     editor: [result],
-    memory: [...letsCalculateValue, key],
+    memory: [...getCalculateValue, key],
   };
 }
 
-function reducer(state, action) {
+function calculatorReducer(state, action) {
   switch (action.type) {
     case actionTypes.NUM:
       return addNum(action.payload, state);
@@ -246,7 +243,7 @@ function reducer(state, action) {
 }
 
 const Calculator = ({ initialState }) => {
-  const [state, dispatch] = useReducer(reducer, initialState, init);
+  const [state, dispatch] = useReducer(calculatorReducer, initialState, init);
 
   return (
     <div className={styles.container}>
