@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   flex-flow: column;
-  background-color: rgba(128, 128, 128, 0.24);
+  /* background-color: rgba(128, 128, 128, 0.24); */
 }
 
 h1 {
